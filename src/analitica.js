@@ -12,8 +12,10 @@
  * @param {Object} venta - Objeto que representa una venta.
  * @returns {number} Valor monetario de la venta.
  */
-function valorVenta(venta) {
-  // Tu código aquí
+function valorVenta(venta) {  
+  const total = venta.cantidad * venta.precio;
+
+  return total;
 }
 
 // ============================================================================
@@ -29,7 +31,15 @@ function valorVenta(venta) {
  * @returns {number} Dinero total vendido.
  */
 function totalVendido(ventas) {
-  // Tu código aquí
+  let total = 0;
+
+  for (const venta of ventas) {
+    if (venta.cantidad > 0) {
+      total = total + valorVenta(venta);
+    }
+  }
+
+  return total;
 }
 
 /**
@@ -38,8 +48,19 @@ function totalVendido(ventas) {
  * @param {Array} ventas - Arreglo de objetos de ventas.
  * @returns {number} Total de unidades vendidas.
  */
+function unidadesVendidas(ventas) {
+  let unidades = 0;
+
+  for (const venta of ventas) {
+    if (venta.cantidad > 0) {
+      unidades = unidades + venta.cantidad;
+    }
+  }
+
+  return unidades;
+}
 function totalUnidades(ventas) {
-  // Tu código aquí
+  return unidadesVendidas(ventas);
 }
 
 /**
@@ -48,8 +69,21 @@ function totalUnidades(ventas) {
  * @param {Array} ventas - Arreglo de objetos de ventas.
  * @returns {Object|null} El objeto de la venta más alta.
  */
+function ventaMayor(ventas) {
+  let mayor = null;
+
+  for (const venta of ventas) {
+    if (venta.cantidad > 0) {
+      if (mayor === null || valorVenta(venta) > valorVenta(mayor)) {
+        mayor = venta;
+      }
+    }
+  }
+
+  return mayor;
+}
 function ventaMayorValor(ventas) {
-  // Tu código aquí
+  return ventaMayor(ventas);
 }
 
 /**
@@ -71,9 +105,47 @@ function ventasDeCiudad(ventas, ciudad) {
  * @param {Array} ventas - Arreglo de objetos de ventas.
  * @returns {number} Promedio por venta válida.
  */
-function promedioPorVenta(ventas) {
-  // Tu código aquí
+
+function ticketPromedio(ventas) {
+  let total = 0;
+  let contador = 0;
+
+  for (const venta of ventas) {
+    if (venta.cantidad > 0) {
+      total = total + valorVenta(venta);
+      contador++;
+    }
+  }
+
+  if (contador === 0) {
+    return 0;
+  }
+
+  return total / contador;
 }
+
+function promedioPorVenta(ventas) {
+  return ticketPromedio(ventas);
+}
+
+
+function ventasPorCiudad(ventas, ciudad) {
+  let total = 0;
+
+  const ciudadBuscada = ciudad.trim().toLowerCase();
+
+  for (const venta of ventas) {
+    const ciudadVenta = venta.ciudad.trim().toLowerCase();
+
+    if (ciudadVenta === ciudadBuscada && venta.cantidad > 0) {
+      total = total + valorVenta(venta);
+    }
+  }
+
+  return total;
+}
+
+
 
 // ============================================================================
 // MINIRRETO 3: Métodos de arreglo (.filter, .map, .reduce, .sort) y Top K
@@ -142,10 +214,14 @@ function topProductosPorValor(ventas, k) {
 module.exports = {
   valorVenta,
   totalVendido,
+  unidadesVendidas,
   totalUnidades,
+  ventaMayor,
   ventaMayorValor,
   ventasDeCiudad,
+  ventasPorCiudad,
   promedioPorVenta,
+  ticketPromedio,
   ventasValidas,
   resumenVentas,
   totalPorCiudad,
